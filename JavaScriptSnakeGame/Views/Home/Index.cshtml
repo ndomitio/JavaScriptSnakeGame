@@ -1,3 +1,51 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
+<div id="container"></div>
+
+<style>
+    #container {
+        width: 500px;
+        height: 500px;
+        border: 1px solid black;
+    }
+
+    .snake {
+        width: 5px;
+        height: 5px;
+        background: black;
+        position:relative;
+    }
+</style>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script>
+    var PIXEL_SIZE = 5;
+
+    function Snake($container) {
+        var x = 0, y = 0;
+        var vx = 1, vy = 0;
+
+        var $snake = $("<div class='snake' />");
+        $snake.appendTo($container);
+
+        return {
+            update: function () {
+                x += vx;
+                y += vy;
+                $snake.css({
+                    left: x * PIXEL_SIZE,
+                    top: y * PIXEL_SIZE
+                });
+            },
+        };
+    }
+
+    $(function myFunction() {
+        var $container = $("#container");
+        var snake = Snake($container);
+        setInterval(function () {
+            snake.update();
+        }, 500);
+
+    });
+</script>
