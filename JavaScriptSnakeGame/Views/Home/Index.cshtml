@@ -5,8 +5,8 @@
 
 <style>
     #container {
-        width: 500px;
-        height: 500px;
+        width: 300px;
+        height: 300px;
         border: 1px solid black;
     }
 
@@ -20,46 +20,86 @@
 <script src="~/Scripts/jquery-1.10.2.js"></script>
 <script>
     var PIXEL_SIZE = 5;
+    var BOARD_WIDTH = 60;
 
-    function Snake($container) {
+    function SnakePiece($container, parent) {
         var x = 0, y = 0;
         var vx = 1, vy = 0;
+        var children = [];
 
         var $snake = $("<div class='snake' />");
         $snake.appendTo($container);
 
-        return {
+        
+        var self = {
             update: function () {
+
+                
+                //find new position based on current velocity
                 x += vx;
                 y += vy;
+                
+                //keep  within the board bounds
+                if (x < 0) x = 0;
+                if (y < 0) y = 0;
+                if (x >= BOARD_WIDTH) x = BOARD_WIDTH - 1;
+                if (y >= BOARD_WIDTH) y = BOARD_WIDTH - 1;
+                this.move(x, y);                
+                this.render();
+            },
+
+            direct: function (_vx, _vy) {
+                vx = _vx;
+                vy = _vy;
+            },
+            move: function (_x, _y) {
+                children.forEach(function (child) { child.move(x, y) });
+
+                x = _x;
+                y = _y;
+
+                this.render();
+                
+            },
+
+            render: function () {
                 $snake.css({
                     left: x * PIXEL_SIZE,
                     top: y * PIXEL_SIZE
                 });
             },
 
-            direct: function (_vx, _vy) {
-                vx = _vx;
-                vy = _vy;
+            addChild: function (child) {
+                children.push(child)
             }
-
         };
+        if (parent) parent.addChild(self);
+
+        return self;
     }
 
     $(function myFunction() {
         var $container = $("#container");
-        var snake = Snake($container);
+        var head = SnakePiece($container);
+        var pieces = [head];
+        pieces.push(SnakePiece($container, pieces[pieces.length - 1]));
+        pieces.push(SnakePiece($container, pieces[pieces.length - 1]));
+        pieces.push(SnakePiece($container, pieces[pieces.length - 1]));
+        
+        
         setInterval(function () {
-            snake.update();
-        }, 200);
+            head.update();
+        }, 50);
+
+        //var snake = SnakePiece($container);
 
 
-        $(document).on("keydown", function (e) {
+        $(document.body).on("keydown", function (e) {
             switch (e.which) {
-                case 38: snake.direct(0, -1); break;
-                case 40: snake.direct(0, 1); break;
-                case 37: snake.direct(-1, 0); break;
-                case 39: snake.direct(1, 0); break;
+                case 38: head.direct(0, -1); break;
+                case 40: head.direct(0, 1); break;
+                case 37: head.direct(-1, 0); break;
+                case 39: head.direct(1, 0); break;
             }
         });
     });
