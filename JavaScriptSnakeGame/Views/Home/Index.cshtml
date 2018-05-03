@@ -14,7 +14,7 @@
         width: 5px;
         height: 5px;
         background: black;
-        position:relative;
+        position: relative;
     }
 </style>
 <script src="~/Scripts/jquery-1.10.2.js"></script>
@@ -37,6 +37,12 @@
                     top: y * PIXEL_SIZE
                 });
             },
+
+            direct: function (_vx, _vy) {
+                vx = _vx;
+                vy = _vy;
+            }
+
         };
     }
 
@@ -45,7 +51,16 @@
         var snake = Snake($container);
         setInterval(function () {
             snake.update();
-        }, 500);
+        }, 200);
 
+
+        $(document).on("keydown", function (e) {
+            switch (e.which) {
+                case 38: snake.direct(0, -1); break;
+                case 40: snake.direct(0, 1); break;
+                case 37: snake.direct(-1, 0); break;
+                case 39: snake.direct(1, 0); break;
+            }
+        });
     });
 </script>
