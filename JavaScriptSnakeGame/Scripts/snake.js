@@ -62,6 +62,7 @@ function get(x, y) {
     return document.getElementById(x + "-" + y);
 }
 function set(x, y, value) {
+    if (x!= null && y!= null)
     get(x, y).setAttribute("class", value);
 }
 
@@ -85,10 +86,10 @@ function createFruit() {
     fY = fruitY;
 }
 
-window.addEventListener("keypress", function key() {
+window.addEventListener("keypress", function key(event) {
     //if key is W set direction up
     var key = event.keyCode;
-    if (direction != -1 && (key == 199 || key == 87))
+    if (direction != -1 && (key == 119 || key == 87))
         direction = 0;
     //if key is S set direction down;
     else if (direction != 0 && (key == 115 || key == 83))
@@ -100,10 +101,19 @@ window.addEventListener("keypress", function key() {
     else if (direction != 1 && (key == 100 || key == 68))
         direction = 2;
     if (!running)
-        running == true;
+        running = true;
     else if (key == 32)
         running = false;
 });
+
+//$(document.body).on("keydown", function (e) {
+//    switch (e.which) {
+//        case 38: head.direct(0, -1); break;
+//        case 40: head.direct(0, 1); break;
+//        case 37: head.direct(-1, 0); break;
+//        case 39: head.direct(1, 0); break;
+//    }
+//});
 
 function gameLoop() {
     if (running && !gameOver) {
@@ -113,7 +123,7 @@ function gameLoop() {
     }
 }
 function update() {
-    setBlock(fx, fy, "fruit");
+    set(fX, fY, "fruit");
     set(tailX[length], tailY[length], "blank");
     if (direction == 0)
         snakeY--;
@@ -122,8 +132,18 @@ function update() {
     else if (direction == 1)
         snakeX--;
     else if (direction == 2)
-        snakeX--;
-}
+        snakeX++;
 
+    set(snakeX, snakeY, "snake");
+
+}
+function updateTail() {
+    for (var i = length; i > 0; i--) {
+        tailX[i] = tailX[i - 1];
+        tailY[i] = tailY[i - 1];
+    }
+    tailX[0] = snakeX;
+    tailY[0] = snakey;
+}
 
 run();
