@@ -65,5 +65,24 @@ function set(x, y, value) {
     get(x,y).setAttribute("class", value);
 }
 
+function rand(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+}
+
+function getType(x, y) {
+    return get(x, y).getAttribute("class");
+}
+function createFruit() {
+    var found = false;
+    while (!found && (length < (width - 2) * (height - 2) + 1)) {
+        var fruitX = rand(1, width - 1);
+        var fruitY = rand(1, height - 1);
+        if (getType(fruitX, fruitY) == "blank")
+            found = true;
+    }
+    set(fruitX, fruitY, "fruit");
+    fX = fruitX;
+    fY = fruitY;
+}
 
 run();
