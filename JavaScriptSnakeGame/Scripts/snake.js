@@ -7,6 +7,7 @@ var interval = 100;
 var increment = 1;
 
 //game variables
+var length = 0;
 var tailX = [snakeX];
 var tailY = [snakeY];
 var fX;
@@ -62,8 +63,8 @@ function get(x, y) {
     return document.getElementById(x + "-" + y);
 }
 function set(x, y, value) {
-    if (x!= null && y!= null)
-    get(x, y).setAttribute("class", value);
+    if (x != null && y != null)
+        get(x, y).setAttribute("class", value);
 }
 
 function rand(min, max) {
@@ -124,6 +125,17 @@ function gameLoop() {
 }
 function update() {
     set(fX, fY, "fruit");
+    function updateTail() {
+        for (var i = length; i > 0; i--) {
+            tailX[i] = tailX[i - 1];
+            tailY[i] = tailY[i - 1];
+        }
+        tailX[0] = snakeX;
+        tailY[0] = snakey;
+
+    }
+
+    //updateTail();
     set(tailX[length], tailY[length], "blank");
     if (direction == 0)
         snakeY--;
@@ -136,14 +148,6 @@ function update() {
 
     set(snakeX, snakeY, "snake");
 
-}
-function updateTail() {
-    for (var i = length; i > 0; i--) {
-        tailX[i] = tailX[i - 1];
-        tailY[i] = tailY[i - 1];
-    }
-    tailX[0] = snakeX;
-    tailY[0] = snakey;
 }
 
 run();
